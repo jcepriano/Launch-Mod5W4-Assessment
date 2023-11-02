@@ -1,4 +1,7 @@
 ﻿using GalaxyQuest.Models;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using static System.Net.WebRequestMethods;
 
 namespace GalaxyQuest.Services
 {
@@ -14,5 +17,55 @@ namespace GalaxyQuest.Services
             new Planet() { Name = "Uranus", Population = 0 },
             new Planet() { Name = "Neptune", Population = 0 }
         };
+
+        private readonly HttpClient _httpClient;
+
+        public MilkyWayGalaxy(IHttpClientFactory clientFactory)
+        {
+            _httpClient = clientFactory.CreateClient("SwapiApi");
+        }
+
+        //public async Task<List<Planet>> GetPlanets()
+        //{
+        //    string url = "";
+
+        //    try
+        //    {
+        //        HttpResponseMessage response = await _httpClient.GetAsync(url);
+        //        response.EnsureSuccessStatusCode();
+        //        string responseBody = await response.Content.ReadAsStringAsync();
+
+        //        var planets = Newtonsoft.Json.JsonConvert.DeserializeObject()
+        //    }
+        //}
+
+        public async Task<List<Planet>> GetPlanets()
+        {
+            var url = string.Format("/planets");
+            var result = new List<Planet>();
+            var response = await _httpClient.GetAsync(url);
+
+            //if (response.IsSuccessStatusCode)
+            //{
+
+
+                var stringResponse = await response.Content.ReadAsStringAsync();
+            result = JsonSerializer.Deserialize<List<Planet>>(stringResponse,
+                new JsonSerializerOptions()
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
+
+            //}
+            //else
+            //{
+            //    throw new HttpRequestException(response.ReasonPhrase);
+            //}
+
+            return result;
+        }
+
+
+
     }
 }

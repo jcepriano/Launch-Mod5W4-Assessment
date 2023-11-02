@@ -4,6 +4,12 @@
 
 The planets of the star wars galaxy should be here!
 
+@foreach(Planet planet in Model)
+{
+    <p>Name: @planet.Name</p>
+    <p>Population: @planet.Population</p>
+}
+
 <h2>Milky Way Planets</h2>
 
 <table class="table">
