@@ -1,7 +1,11 @@
+using GalaxyQuest.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<MilkyWayGalaxy>();
+builder.Services.AddHttpClient("SwapiApi", c => c.BaseAddress = new Uri("https://swapi.dev/api"));
 
 var app = builder.Build();
 
